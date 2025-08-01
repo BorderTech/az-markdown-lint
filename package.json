@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+        "azure-pipelines-task-lib": "5.2.1",
+        "glob": "^11.0.3",
+        "markdownlint": "^0.38.0"
+    },
+    "devdependecies ": {
+        "@nodes/type": "24.0.10",
+        "typescript": "5.8.3"
+    },
+    "devDependencies": {
+        "@types/node": "^24.1.0"
+    }
+}

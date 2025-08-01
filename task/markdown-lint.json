@@ -1,0 +1,37 @@
+{
+  "id": "56928e9b-0e37-406c-9d8a-24e2342c7c9f",
+  "name": "azure markdown lint",
+  "friendlyName": "Azure Markdown Lint",
+  "description": "Markdown lint for Azure DevOps",
+  "category": "Build",
+  "author": "BorderTech",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "instanceNameFormat": "Markdown Lint $(files)",
+  "inputs": [
+    {
+      "name": "files",
+      "type": "string",
+      "label": "File pattern",
+      "defaultValue": "**/*.md",
+      "required": true
+      
+    },
+    {
+      "name": "configFile",
+      "type": "string",
+      "label": "Custom config file",
+      "defaultValue": "",
+      "required": false
+      
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "index.ts"
+    }
+  }
+}

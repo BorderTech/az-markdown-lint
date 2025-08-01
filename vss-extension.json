@@ -1,0 +1,56 @@
+{
+  "manifestVersion": 1,
+  "id": "56928e9b-0e37-406c-9d8a-24e2342c7c9f",
+  "publisher": "BorderTech",
+  "version": "1.0.0",
+  "name": "Azure Markdown Lint",
+  "description": "A Markdown lint extension for Azure Pipelines.",
+  "public": true,
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "tags": [
+    "Markdown",
+    "Lint",
+    "linter",
+    "linting"
+  ],
+  "icons": {
+    "default": "images/icon.png"
+  },
+  "content": {
+    "details": {
+      "path": "overview.md"
+    }
+  },
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "markdown-lint-task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "Microsoft.VisualStudio.Services"
+      ],
+      "properties": {
+        "name": "task/markdown-lint"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "task"
+    },
+    {
+      "path": "node_modules",
+      "packagePath": "node_modules"
+    },
+    {
+      "path": "images/icon.png",
+      "addressable": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+trigger: 
+ main
+
+pool:
+ vmImage: ubuntu-latest
+
+steps: 
+ checkout: self
+ featchTags: true
+
+tasks: "axure-mark-down-lint"
+inputs: 
+file: "**/*.md"
+configfile: "markdown.config.json" 
