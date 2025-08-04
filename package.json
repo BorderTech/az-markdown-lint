@@ -1,4 +1,7 @@
 {
+    "scripts": {
+        "lint": "eslint"
+    },
     "dependencies": {
         "azure-pipelines-task-lib": "5.2.1",
         "glob": "^11.0.3",
@@ -9,6 +12,8 @@
         "typescript": "5.8.3"
     },
     "devDependencies": {
-        "@types/node": "^24.1.0"
+        "@stylistic/eslint-plugin": "^5.2.2",
+        "@types/node": "^24.1.0",
+        "eslint": "^9.32.0"
     }
 }
