@@ -17,7 +17,7 @@ export default [
 			'@stylistic/brace-style': ['error', '1tbs'],
 			'@stylistic/comma-style': ['error', 'last'],
 			'@stylistic/no-trailing-spaces': 'error',
-			'@stylistic/space-before-function-paren': ['error', 'always'],
+			'@stylistic/space-before-function-paren': ['error', 'never'],
 			'@stylistic/no-multi-spaces': 'error',
 			'@stylistic/object-curly-spacing': ['error', 'always'],
 			'@stylistic/arrow-spacing': ['error', { 'before': true, 'after': true }],
