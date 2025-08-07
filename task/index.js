@@ -1,6 +1,7 @@
-import * as glob from 'glob';
-import { lint as lintPromise } from 'markdownlint/promise';
-import * as tl from 'azure-pipelines-task-lib/task.js';
+const glob = require('glob');
+const { lint } = require('markdownlint/promise');
+const lintPromise = lint;
+const tl = require('azure-pipelines-task-lib/task.js');
 
 
 const pattern = process.argv[2] || '**.md'; // should be users markdown files when running the program
