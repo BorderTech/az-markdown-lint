@@ -1,6 +1,8 @@
 {
     "scripts": {
-        "lint": "eslint"
+        "lint": "eslint",
+        "main": "node src/index.js",
+        "test": "npm run lint && mocha tests/_suite.js"
     },
     "dependencies": {
         "azure-pipelines-task-lib": "5.2.1",
@@ -14,6 +16,7 @@
     "devDependencies": {
         "@stylistic/eslint-plugin": "^5.2.2",
         "@types/node": "^24.1.0",
-        "eslint": "^9.32.0"
+        "eslint": "^9.32.0",
+        "mocha": "^11.7.1"
     }
 }
