@@ -18,11 +18,14 @@ describe('markdown lint tests', function() {
 		});
 	}
 
-	it('Should not find any errors in good markdown files', function(done) {
+	beforeEach(() => {
 		this.timeout(timeout);
+		process.env['BUILD_SOURCESDIRECTORY'] = __dirname;
+	});
 
-		let tp = path.join(__dirname, 'good_markdown.js');
-		let tr = new ttm.MockTestRunner(tp, taskJsonPath);
+	it('Should not find any errors in good markdown files', function(done) {
+		const tp = path.join(__dirname, 'good_markdown.js');
+		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.succeeded);
 			done();
@@ -30,10 +33,8 @@ describe('markdown lint tests', function() {
 	});
 
 	it('Should find errors in bad markdown files', function(done) {
-		this.timeout(timeout);
-
-		let tp = path.join(__dirname, 'bad_markdown.js');
-		let tr = new ttm.MockTestRunner(tp, taskJsonPath);
+		const tp = path.join(__dirname, 'bad_markdown.js');
+		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.failed, 'should fail when there are markdown lint violations');
 			done();
@@ -41,10 +42,8 @@ describe('markdown lint tests', function() {
 	});
 
 	it('Should report the specific lint violations', function(done) {
-		this.timeout(timeout);
-
-		let tp = path.join(__dirname, 'bad_line_length.js');
-		let tr = new ttm.MockTestRunner(tp, taskJsonPath);
+		const tp = path.join(__dirname, 'bad_line_length.js');
+		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.failed, 'should fail when a line length exceeds the maximum');
 			assert(tr.stdOutContained('MD013'), 'should give the rule ID');
@@ -56,10 +55,8 @@ describe('markdown lint tests', function() {
 
 
 	it('Should honor the config file', function(done) {
-		this.timeout(timeout);
-
-		let tp = path.join(__dirname, 'bad_markdown_with_config.js');
-		let tr = new ttm.MockTestRunner(tp, taskJsonPath);
+		const tp = path.join(__dirname, 'bad_markdown_with_config.js');
+		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.succeeded, 'Should not fail when the config overrides the failing rules');
 			done();
@@ -67,12 +64,20 @@ describe('markdown lint tests', function() {
 	});
 
 	it('Should traverse subdirectories', function(done) {
-		this.timeout(timeout);
-
-		let tp = path.join(__dirname, 'all_markdown.js');
-		let tr = new ttm.MockTestRunner(tp, taskJsonPath);
+		const tp = path.join(__dirname, 'all_markdown.js');
+		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.failed, 'should scan all markdown files, good and bad');
+			done();
+		}).catch(done);
+	});
+
+	it('Should skip when no files found', function(done) {
+		const tp = path.join(__dirname, 'no_markdown.js');
+		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
+		run(tr).then(function() {
+			assert(tr.succeeded, 'should skip when no files found');
+			assert(tr.stdOutContained('No markdown files to scan'));
 			done();
 		}).catch(done);
 	});

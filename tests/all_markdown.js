@@ -6,5 +6,5 @@ const tmrm = require('azure-pipelines-task-lib/mock-run');
 const { getTaskPath } = require('./testUtils');
 
 let tmr = new tmrm.TaskMockRunner(getTaskPath());
-tmr.setInput('pattern', 'tests/resources/**/*.md');
+tmr.setInput('pattern', 'resources/**/*.md');
 tmr.run();
