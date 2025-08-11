@@ -1,44 +1,76 @@
 const glob = require('glob');
-const { lint } = require('markdownlint/promise');
-const lintPromise = lint;
-const tl = require('azure-pipelines-task-lib/task.js');
+const tl = require('azure-pipelines-task-lib/task');
 
+function getOptions(markdownlint) {
+	return new Promise(win => {
+		const pattern = tl.getInput('pattern', false) || '**/*.md';
+		const configPath = tl.getPathInput('config', false, true);
+		const files = glob.sync(pattern, {
+			ignore: ['**/node_modules/**']
+		});
+		const options = {
+			files,
+			config: {
+				default: true,
+				MD013: {
+					line_length: 160,
+				}
+			}
+		};
 
-const pattern = process.argv[2] || '**.md'; // should be users markdown files when running the program
-const files = glob.sync(pattern); // glob will work its magic and find the users markdown documents
-
-if (files.length == 0) {
-	console.warn(' No lines to lint 🔍:');
-	process.exit(0);
+		if (configPath) {
+			return markdownlint.readConfig(configPath).then(loadedConfig => {
+				options.config = loadedConfig;
+				win(options);
+			});
+		} else {
+			win(options);
+		}
+	});
 }
 
-const options = {
-	files,
-	config: {
-		default: true,
-		MD013: {
-			line_length: 160,
-		}
-	}
-};
+function handleResult(lintResults) {
+	let errorCount = 0;
+	const items = Object.entries(lintResults);
+	items.forEach(([markdownFile, issues]) => {
+		console.log('Checking results for', markdownFile);
+		if (issues.length) {
+			try {
+				issues.forEach(issue => {
+					errorCount++;
+					tl.logIssue(
+						tl.IssueType.Error,
+						issue?.ruleNames[0],
+						markdownFile,
+						issue?.lineNumber,
+						issue?.errorRange[0]
+					);
+				});
+			} catch(ex) {
+				console.error(ex);
+			}
 
-const results = lintPromise(options);
-results.then(handleresults);
-function handleresults(lintresults) {
-	console.dir(lintresults, { 'colors': true, 'depth': null });
+		}
+	});
+	if (errorCount) {
+		tl.setResult(tl.TaskResult.Failed, `Found lint ${errorCount} issues`);
+	} else {
+		tl.setResult(tl.TaskResult.Succeeded, `Linted ${items.length} files`);
+	}
 }
 
 async function run() {
-	try {
-		const inputString = tl.getInput('pattern', false);
-		if (inputString == 'bad') {
-			tl.setResult(tl.TaskResult.Failed, 'Bad input was given');
-			return;
-		}
-		console.log('linted results :\n', inputString);
-	} catch(err) {
-		tl.setResult(tl.TaskResult.Failed, err.message);
-	}
+	return import('markdownlint/promise').then(module => {
+		const lintPromise = module.lint;
+		return getOptions(module).then(options => {
+			return lintPromise(options).then(lintResults => {
+				console.dir(lintResults, { 'colors': true, 'depth': null });
+				handleResult(lintResults);
+			}).catch(err => {
+				tl.setResult(tl.TaskResult.Failed, err.message);
+			});
+		});
+	});
 }
 
 run();
