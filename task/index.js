@@ -5,9 +5,7 @@ function getOptions(markdownlint) {
 	return new Promise(win => {
 		const pattern = tl.getInput('pattern', false) || '**/*.md';
 		const configPath = tl.getPathInput('config', false, true);
-		const files = glob.sync(pattern, {
-			ignore: ['**/node_modules/**']
-		});
+		const files = glob.sync(pattern);
 		const options = {
 			files,
 			config: {
@@ -59,16 +57,28 @@ function handleResult(lintResults) {
 	}
 }
 
+function setWorkingDir() {
+	const workingDir = tl.getVariable('build.sourcesDirectory') || __dirname;
+	console.log(`working folder: ${workingDir}`);
+	tl.cd(workingDir);
+	process.chdir(workingDir);
+}
+
 async function run() {
 	return import('markdownlint/promise').then(module => {
 		const lintPromise = module.lint;
+		setWorkingDir();
 		return getOptions(module).then(options => {
-			return lintPromise(options).then(lintResults => {
-				console.dir(lintResults, { 'colors': true, 'depth': null });
-				handleResult(lintResults);
-			}).catch(err => {
-				tl.setResult(tl.TaskResult.Failed, err.message);
-			});
+			if (options.files.length) {
+				return lintPromise(options).then(lintResults => {
+					console.dir(lintResults, { 'colors': true, 'depth': null });
+					handleResult(lintResults);
+				}).catch(err => {
+					tl.setResult(tl.TaskResult.Failed, err.message);
+				});
+			}
+			tl.setResult(tl.TaskResult.SucceededWithIssues, 'No markdown files to scan');
+			tl.warning('No markdown files to scan');
 		});
 	});
 }
