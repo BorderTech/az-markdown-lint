@@ -1,22 +1,24 @@
 {
-    "scripts": {
-        "lint": "eslint",
-        "main": "node src/index.js",
-        "test": "npm run lint && mocha tests/_suite.js"
-    },
-    "dependencies": {
-        "azure-pipelines-task-lib": "5.2.1",
-        "glob": "^11.0.3",
-        "markdownlint": "^0.38.0"
-    },
-    "devdependecies ": {
-        "@nodes/type": "24.0.10",
-        "typescript": "5.8.3"
-    },
-    "devDependencies": {
-        "@stylistic/eslint-plugin": "^5.2.2",
-        "@types/node": "^24.1.0",
-        "eslint": "^9.32.0",
-        "mocha": "^11.7.1"
-    }
+	"name": "az-markdown-lint",
+	"main": "task/index.js",
+	"scripts": {
+		"lint": "eslint",
+		"main": "node task/index.js",
+		"test": "npm run lint && mocha tests/_suite.js"
+	},
+	"dependencies": {
+		"azure-pipelines-task-lib": "5.2.1",
+		"glob": "^11.0.3",
+		"markdownlint": "^0.38.0"
+	},
+	"devdependecies ": {
+		"@nodes/type": "24.0.10",
+		"typescript": "5.8.3"
+	},
+	"devDependencies": {
+		"@stylistic/eslint-plugin": "^5.2.2",
+		"@types/node": "^24.1.0",
+		"eslint": "^9.32.0",
+		"mocha": "^11.7.1"
+	}
 }
