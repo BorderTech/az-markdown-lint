@@ -1,34 +1,46 @@
 const glob = require('glob');
-const { lint } = require('markdownlint/promise');
-const lintPromise = lint;
+const { lintpromise } = require('markdownlint/promise');
 const tl = require('azure-pipelines-task-lib/task.js');
 
 
-const pattern = process.argv[2] || '**.md'; // should be users markdown files when running the program
-const files = glob.sync(pattern); // glob will work its magic and find the users markdown documents
-
-if (files.length == 0) {
-	console.warn(' No lines to lint 🔍:');
-	process.exit(0);
-}
-
-const options = {
-	files,
-	config: {
-		default: true,
-		MD013: {
-			line_length: 160,
-		}
-	}
+export function pattern() {
+	return process.argv[2] || '**.md';
 };
 
-const results = lintPromise(options);
-results.then(handleresults);
-function handleresults(lintresults) {
-	console.dir(lintresults, { 'colors': true, 'depth': null });
+export function files() {
+	return glob.sync(pattern);
+	if (files.length == 0) {
+		console.warn(' No lines to lint 🔍:');
+		process.exit(0);
+	}
+	return files;
 }
 
-async function run() {
+
+export function options() {
+	return {
+		files,
+		config: {
+			default: true,
+			MD013: {
+				line_length: 160,
+			}
+		}
+	};
+};
+
+export function linter() {
+	const results = lintpromise(options);
+	results.then(handleresults);
+	function handleresults(lintresults) {
+		console.dir(lintresults, { 'colors': true, 'depth': null });
+	};
+
+
+};
+
+
+export async function run() {
 	try {
 		const inputString = tl.getInput('pattern', false);
 		if (inputString == 'bad') {
@@ -38,7 +50,8 @@ async function run() {
 		console.log('linted results :\n', inputString);
 	} catch(err) {
 		tl.setResult(tl.TaskResult.Failed, err.message);
-	}
-}
 
-run();
+	};
+	run();
+};
+
