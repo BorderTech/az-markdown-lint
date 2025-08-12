@@ -11,9 +11,9 @@ describe('markdown lint tests', function() {
 
 	function run(testRunner) {
 		return testRunner.runAsync(nodeVersion).then(() => {
-			// console.log('testRunner.stdout', testRunner.stdout);
+			console.log('testRunner.stdout', testRunner.stdout);
 		}).catch(ex => {
-			// console.log('testRunner.stderr', testRunner.stderr);
+			console.log('testRunner.stderr', testRunner.stderr);
 			throw ex;
 		});
 	}
@@ -28,6 +28,7 @@ describe('markdown lint tests', function() {
 		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.succeeded);
+			assert(tr.stdout.match(/Linted [1-9]+ file/)); // It linted one or more file.
 			done();
 		}).catch(done);
 	});
@@ -59,6 +60,7 @@ describe('markdown lint tests', function() {
 		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.succeeded, 'Should not fail when the config overrides the failing rules');
+			assert(tr.stdout.match(/Linted [1-9]+ file/)); // It linted one or more file.
 			done();
 		}).catch(done);
 	});

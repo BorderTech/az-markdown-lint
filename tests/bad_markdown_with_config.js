@@ -7,6 +7,14 @@ const tmrm = require('azure-pipelines-task-lib/mock-run');
 const { getTaskPath } = require('./testUtils');
 
 let tmr = new tmrm.TaskMockRunner(getTaskPath());
-tmr.setInput('pattern', path.join(tl.cwd(), 'resources/bad/line-length.md'));
-tmr.setInput('config', 'resources/.markdownlint.jsonc');
+
+tmr.registerMockExport('getPathInput', (name) => {
+	if (name !== 'config') {
+		throw new Error(`Unexpected input: ${name}`);
+	}
+	return path.join(__dirname, 'resources/.markdownlint.jsonc');
+});
+
+tmr.setInput('pattern', 'resources/bad/line-length.md');
+
 tmr.run();
