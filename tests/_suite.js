@@ -33,7 +33,7 @@ describe('markdown lint tests', function() {
 		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.succeeded);
-			assert(tr.stdout.match(/Linted [1-9]+ file/)); // It linted one or more file.
+			assert(tr.stdout.match(/Linted [1-9]+ markdown file/)); // It linted one or more file.
 			done();
 		}).catch(done);
 	});
@@ -43,6 +43,7 @@ describe('markdown lint tests', function() {
 		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.failed, 'should fail when there are markdown lint violations');
+			assert(tr.stdout.match(/Found [1-9]+ markdownlint issue/));
 			done();
 		}).catch(done);
 	});
@@ -65,7 +66,7 @@ describe('markdown lint tests', function() {
 		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.succeeded, 'Should not fail when the config overrides the failing rules');
-			assert(tr.stdout.match(/Linted [1-9]+ file/)); // It linted one or more file.
+			assert(tr.stdout.match(/Linted [1-9]+ markdown file/)); // It linted one or more file.
 			done();
 		}).catch(done);
 	});
@@ -75,6 +76,7 @@ describe('markdown lint tests', function() {
 		const tr = new ttm.MockTestRunner(tp, taskJsonPath);
 		run(tr).then(function() {
 			assert(tr.failed, 'should scan all markdown files, good and bad');
+			assert(tr.stdout.match(/Found [1-9]+ markdownlint issue/)); // It linted one or more file.
 			done();
 		}).catch(done);
 	});
