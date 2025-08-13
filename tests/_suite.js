@@ -7,19 +7,24 @@ const nodeVersion = 16;
 describe('markdown lint tests', function() {
 	const timeout = (process.env['TASK_TEST_TIMEOUT'] * 1) || 9000;
 	const taskJsonPath = '';
+	this.timeout(timeout);
 	// process.env['TASK_TEST_TRACE'] = 'true';
 
 	function run(testRunner) {
+		const verbose = process.env['SYSTEM_DEBUG'];
 		return testRunner.runAsync(nodeVersion).then(() => {
-			console.log('testRunner.stdout', testRunner.stdout);
+			if (verbose) {
+				console.log('testRunner.stdout', testRunner.stdout);
+			}
 		}).catch(ex => {
-			console.log('testRunner.stderr', testRunner.stderr);
+			if (verbose) {
+				console.log('testRunner.stderr', testRunner.stderr);
+			}
 			throw ex;
 		});
 	}
 
 	beforeEach(() => {
-		this.timeout(timeout);
 		process.env['BUILD_SOURCESDIRECTORY'] = __dirname;
 	});
 
