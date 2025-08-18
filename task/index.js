@@ -2,34 +2,31 @@ const glob = require('glob');
 const { lintpromise } = require('markdownlint/promise');
 const tl = require('azure-pipelines-task-lib/task.js');
 
-
-export function pattern() {
-	return process.argv[2] || '**.md';
-};
-
-export function files() {
-	return glob.sync(pattern);
+function read() {
+	const pattern = process.argv[2] || '**.md';
+	const files = glob.sync(pattern);
 	if (files.length == 0) {
 		console.warn(' No lines to lint 🔍:');
 		process.exit(0);
 	}
 	return files;
-}
 
 
-export function options() {
-	return {
-		files,
-		config: {
-			default: true,
-			MD013: {
-				line_length: 160,
+
+
+	function options() {
+		return {
+			read,
+			config: {
+				default: true,
+				MD013: {
+					line_length: 160,
+				}
 			}
-		}
+		};
 	};
-};
 
-export function linter() {
+
 	const results = lintpromise(options);
 	results.then(handleresults);
 	function handleresults(lintresults) {
@@ -37,10 +34,11 @@ export function linter() {
 	};
 
 
+
 };
 
 
-export async function run() {
+async function run() {
 	try {
 		const inputString = tl.getInput('pattern', false);
 		if (inputString == 'bad') {
@@ -52,6 +50,11 @@ export async function run() {
 		tl.setResult(tl.TaskResult.Failed, err.message);
 
 	};
-	run();
+
 };
+
+module.exports = { run };
+module.exports = { read };
+
+
 
